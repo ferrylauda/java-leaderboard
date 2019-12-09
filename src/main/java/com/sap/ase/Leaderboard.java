@@ -15,39 +15,17 @@ public class Leaderboard {
 		}
 	}
 	
-	public int getPositionOfPlayer(Player player) {
-		if (scoresByPlayer.containsKey(player)) {
-			List<Integer> scores = new ArrayList<Integer>(scoresByPlayer.values());
-			// we first sort the scores in descending order
-			// of course there might be duplicate values when Alice and Bob e.g. have both a score of 5000
-			Collections.sort(scores, Collections.reverseOrder());
-
-			// we will iterate through the sorted scores and move a position counter,
-			// but we move it only if the score is different from the previous one,
-			// so that players with the same score have the same position 
-			int p = 1; // position
-			int c = 1; // same-score-counter
-			
-			for (int i = 0; i < scores.size(); i++) {
-				int score = scores.get(i);
-				
-				if (i > 0) {
-					// if score same than previous
-					if (scores.get(i) == scores.get(i - 1)) {
-						c++; // increment the same-score-counter by 1
-					}
-					// if score not same than previous
-					if (scores.get(i) != scores.get(i - 1)) {
-						p = p + c; // increment the position by same-score-counter
-						c = 1; // reset same-score-counter
-					}
-				} // if (i > 0) && (scores.get(i) == scores.get(i - 1))
-				
-				if (scoresByPlayer.get(player) == score) {
-					return p;
-				} // if (i > 0) {
-			} // for (int i = 0; i < scores.size(); i++)
-		} // if (scoresByPlayer.containsKey(player))
-		return scoresByPlayer.size() + 1;
+	public int getPositionOfPlayer(Player player) 
+	{
+		List<Integer> topScores = new ArrayList<Integer>(scoresByPlayer.values());
+		Collections.sort(topScores, Collections.reverseOrder());
+		
+		for(Player thisPlayer: scoresByPlayer.keySet()) {
+			if(thisPlayer.getId() == player.getId()) {
+				return topScores.indexOf(scoresByPlayer.get(thisPlayer)) + 1;
+			}
+		}
+		
+		return topScores.size()+1;
 	}
 }
